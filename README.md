@@ -8,7 +8,7 @@ InstagramBundle - A bundle to interact with Instagram API
 Features
 --------
 
- * Authenticate to Instagram API
+ * Authenticate with Instagram API
  * Retrieve instagram photos
 
 Installation / Configuration
@@ -47,11 +47,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Acme\DemoBundle\Form\ContactType;
 
-// these import the "@Route" and "@Template" annotations
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-class DemoController extends Controller
+class InstagramController extends Controller
 {
     /**
      * Authenticate user with Instagram OAuth API
