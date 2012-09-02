@@ -1,0 +1,23 @@
+{
+    "name": "eko/instagrambundle",
+    "type": "library",
+    "description": "A Symfony Instagram bundle",
+    "keywords": ["instagram", "bundle", "symfony"],
+    "homepage": "http://github.com/eko/instagrambundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vincent Composieux",
+            "email": "vincent.composieux@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": ">=2.0,<2.2-dev",
+        "guzzle/guzzle": "2.8.*"
+},
+    "autoload": {
+        "psr-0": { "Eko\\InstagramBundle": "" }
+    },
+    "target-dir": "Eko/InstagramBundle"
+}
