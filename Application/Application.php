@@ -13,6 +13,7 @@ namespace Eko\InstagramBundle\Application;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 use Eko\InstagramBundle\Api\Authentication;
+use Eko\InstagramBundle\Application\Account;
 
 /**
  * Instagram Application
@@ -39,6 +40,11 @@ class Application extends Authentication
     protected $redirectRoute;
 
     /**
+     * @var \Eko\InstagramBundle\Application\Account $account Account data returned by Instagram
+     */
+    protected $account;
+
+    /**
      * Constructor
      *
      * @param array $config Configuration array
@@ -55,6 +61,16 @@ class Application extends Authentication
         );
 
         parent::__construct($authenticationParameters);
+    }
+
+    /**
+     * Returns Account
+     *
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**
@@ -94,5 +110,20 @@ class Application extends Authentication
         $route = $this->get('redirect_route');
 
         return $this->router->generate($route, array(), true);
+    }
+
+    /**
+     * Returns authentication token returned by Instagram API
+     *
+     * @param string $code Authentication code returned by Instagram first-step query
+     *
+     * @return Application
+     */
+    public function authenticate($code)
+    {
+        $data = $this->requestAccessToken($code);
+        $this->account = new Account($data);
+
+        return $this;
     }
 }

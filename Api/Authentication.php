@@ -11,8 +11,8 @@
 namespace Eko\InstagramBundle\Api;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Guzzle\Service\Client;
 
+use Eko\InstagramBundle\Api\Client;
 use Eko\InstagramBundle\Application\Application;
 
 /**
@@ -22,27 +22,17 @@ use Eko\InstagramBundle\Application\Application;
  *
  * @author Vincent Composieux <vincent.composieux@gmail.com>
  */
-class Authentication
+class Authentication extends Client
 {
-    /**
-     * @var \Guzzle\Service\Client $client Guzzle http client
-     */
-    protected $client;
-
-    /**
-     * @var string $apiBaseUrl Instagram API base url
-     */
-    protected $apiBaseUrl = 'https://api.instagram.com';
-
     /**
      * @var array $parameters Authentication parameters
      */
     protected $parameters = array();
 
     /**
-     * @var string $authenticationCode Authentication code returned by Instagram (first step)
+     * @var string $token Authentication token returned by Instagram (second step)
      */
-    protected $authenticationCode;
+    protected $token;
 
     /**
      * Constructor
@@ -52,20 +42,18 @@ class Authentication
     public function __construct(array $parameters)
     {
         $this->parameters = $parameters;
+
+        parent::__construct();
     }
 
     /**
-     * Sets authentication returned by Instagram (first step)
+     * Returns application access token
      *
-     * @param string $code Authentication code returned by Instagram
-     *
-     * @return Authentication
+     * @return string
      */
-    public function setAuthenticationCode($code)
+    public function getAccessToken()
     {
-        $this->authenticationCode = $code;
-
-        return $this;
+        return $this->token;
     }
 
     /**
@@ -75,35 +63,46 @@ class Authentication
      */
     public function getAuthenticationCodeUrl()
     {
-        $client = new Client($this->apiBaseUrl);
-
         $parameters = sprintf(
             '/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code',
             $this->parameters['client_id'],
             $this->parameters['redirect_url']
         );
 
-        $request = $client->get($parameters);
+        $request = $this->client->get($parameters);
 
         return $request->getUrl();
     }
 
-    public function getAccessToken()
+    /**
+     * Returns authentication token and user data returned by Instagram API
+     *
+     * @param string $code Authentication code returned by Instagram first-step query
+     *
+     * @return string
+     *
+     * @throws \RuntimeException When unable to parse json data returned
+     */
+    public function requestAccessToken($code)
     {
-        $client = new Client($this->apiBaseUrl);
-
         $parameters = array(
             'grant_type'    => 'authorization_code',
             'client_id'     => $this->parameters['client_id'],
             'client_secret' => $this->parameters['client_secret'],
             'redirect_uri'  => $this->parameters['redirect_url'],
-            'code'          => $this->authenticationCode
+            'code'          => $code
         );
 
-        $request = $client->post('/oauth/access_token', null, $parameters);
+        $response = $this->client->post('/oauth/access_token', null, $parameters)->send();
 
-        $response = $request->send();
+        $data = json_decode($response->getBody(true));
 
-        var_dump($response->getMessage()); exit;
+        if (empty($data)) {
+            throw new \RuntimeException('Unable to parse access token JSON data from Instagram API');
+        }
+
+        $this->token = $data->access_token;
+
+        return $data;
     }
 }

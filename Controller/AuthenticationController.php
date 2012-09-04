@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthenticationController extends Controller
 {
     /**
-     * Authentication redirect action
+     * Most recent medias action
      *
      * @param \Symfony\Component\HttpFoundation\Request $request Request object
      *
@@ -33,12 +33,17 @@ class AuthenticationController extends Controller
      */
     public function redirectAction(Request $request)
     {
-        $application = $this->get('eko_instagram.application.manager')->get('vcomposieux');
+        // Get returned code and obtain token access with it
+        $code = $request->query->get('code');
 
-        $application->setAuthenticationCode(
-            $request->query->get('code')
-        );
+        $application = $this->get('eko_instagram.application.manager')
+            ->get('vcomposieux')
+            ->authenticate($code);
 
-        $application->getAccessToken();
+        // Initialize Users API endpoint and set authenticated application
+        $users = $this->get('eko_instagram.api.endpoint.users')
+            ->setApplication($application);
+
+        $medias = $users->getRecentMedias();
     }
 }

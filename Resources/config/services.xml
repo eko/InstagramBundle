@@ -8,6 +8,7 @@
 
     <parameters>
         <parameter key="eko_instagram.application.manager.class">Eko\InstagramBundle\Application\ApplicationManager</parameter>
+        <parameter key="eko_instagram.api.endpoint.users.class">Eko\InstagramBundle\Api\Endpoint\Users</parameter>
     </parameters>
 
     <!-- Services-->
@@ -17,6 +18,8 @@
             <argument type="service" id="router" />
             <argument>%eko_instagram.config%</argument>
         </service>
+
+        <service id="eko_instagram.api.endpoint.users" class="%eko_instagram.api.endpoint.users.class%" />
     </services>
 
 </container>

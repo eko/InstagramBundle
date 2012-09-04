@@ -36,24 +36,12 @@ eko_instagram:
 Authenticate user
 -----------------
 
-### Create a new controller action with the following line
+### 1) Create a first controller action to retrieve authentication code
 
 ```php
 <?php
-
-namespace Eko\DemoBundle\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Acme\DemoBundle\Form\ContactType;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-class InstagramController extends Controller
-{
     /**
-     * Authenticate user with Instagram OAuth API
+     * Get Instagram authentication code API action
      *
      * @Route("/instagram/authenticate", name="_demo_instagram_authenticate")
      * @Template()
@@ -64,7 +52,34 @@ class InstagramController extends Controller
 
         return $this->redirect($application->getAuthenticationCodeUrl());
     }
-}
+```
+
+### 2) Create a second controller to use your API method
+
+```php
+<?php
+    /**
+     * Most recent medias action
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request Request object
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function redirectAction(Request $request)
+    {
+        // Get returned code and obtain token access with it
+        $code = $request->query->get('code');
+
+        $application = $this->get('eko_instagram.application.manager')
+            ->get('vcomposieux')
+            ->authenticate($code);
+
+        // Initialize Users API endpoint and set authenticated application
+        $users = $this->get('eko_instagram.api.endpoint.users')
+            ->setApplication($application);
+
+        $medias = $users->getRecentMedias();
+    }
 ```
 
 More soon
