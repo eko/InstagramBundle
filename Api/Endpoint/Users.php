@@ -11,7 +11,6 @@
 namespace Eko\InstagramBundle\Api\Endpoint;
 
 use Eko\InstagramBundle\Api\Endpoint\Endpoint;
-use Eko\InstagramBundle\Application\Application;
 
 /**
  * Users
@@ -41,6 +40,8 @@ class Users extends Endpoint
      *
      * @api /v1/users/self/feed
      *
+     * @param array $options Optionals parameters options
+     *
      * Additionally, you can add the following options:
      * - count:  Count of media to return
      * - min_id: Return media later than this min_id
@@ -59,6 +60,8 @@ class Users extends Endpoint
      * Returns user most recent medias
      *
      * @api /v1/users/{id}/media/recent
+     *
+     * @param array $options Optionals parameters options
      *
      * Additionally, you can add the following options:
      * - count:         Count of media to return
@@ -81,6 +84,8 @@ class Users extends Endpoint
      *
      * @api /v1/users/self/media/liked
      *
+     * @param array $options Optionals parameters options
+     *
      * Additionally, you can add the following options:
      * - count:       Count of media liked to return
      * - max_like_id: Return media liked before this id
@@ -98,6 +103,9 @@ class Users extends Endpoint
      * Returns a search for a user by name
      *
      * @api /v1/users/search
+     *
+     * @param string $query   Name to search
+     * @param array  $options Optionals parameters options
      *
      * Additionally, you can add the following options:
      * - count: Number of users to return
