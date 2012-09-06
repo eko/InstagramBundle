@@ -73,8 +73,6 @@ class Endpoint extends Client
         $url = sprintf($url . '?access_token=%s', $token);
         $url .= '&' . http_build_query($options);
 
-        echo $url; exit;
-
         $response = $this->client->get($url)->send();
 
         $data = json_decode($response->getBody(true));
