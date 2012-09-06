@@ -8,7 +8,10 @@
 
     <parameters>
         <parameter key="eko_instagram.application.manager.class">Eko\InstagramBundle\Application\ApplicationManager</parameter>
+
         <parameter key="eko_instagram.api.endpoint.users.class">Eko\InstagramBundle\Api\Endpoint\Users</parameter>
+        <parameter key="eko_instagram.api.endpoint.media.class">Eko\InstagramBundle\Api\Endpoint\Media</parameter>
+        <parameter key="eko_instagram.api.endpoint.geographies.class">Eko\InstagramBundle\Api\Endpoint\Geographies</parameter>
     </parameters>
 
     <!-- Services-->
@@ -19,7 +22,9 @@
             <argument>%eko_instagram.config%</argument>
         </service>
 
-        <service id="eko_instagram.api.endpoint.users" class="%eko_instagram.api.endpoint.users.class%" />
+        <service id="eko_instagram.api.endpoint.users"       class="%eko_instagram.api.endpoint.users.class%" />
+        <service id="eko_instagram.api.endpoint.media"       class="%eko_instagram.api.endpoint.media.class%" />
+        <service id="eko_instagram.api.endpoint.geographies" class="%eko_instagram.api.endpoint.geographies.class%" />
     </services>
 
 </container>

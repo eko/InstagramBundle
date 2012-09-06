@@ -47,6 +47,18 @@ class Authentication extends Client
     }
 
     /**
+     * Returns value for a specified parameter name
+     *
+     * @param string $parameter Parameter name
+     *
+     * @return string|null
+     */
+    public function getParameter($parameter)
+    {
+        return isset($this->parameters[$parameter]) ? $this->parameters[$parameter] : null;
+    }
+
+    /**
      * Returns application access token
      *
      * @return string
