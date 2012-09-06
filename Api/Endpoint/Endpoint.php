@@ -31,10 +31,14 @@ class Endpoint extends Client
      * Sets Application
      *
      * @param \Eko\InstagramBundle\Application\Application $application An Application instance
+     *
+     * @return Endpoint
      */
     public function setApplication(Application $application)
     {
         $this->application = $application;
+
+        return $this;
     }
 
     /**
@@ -48,14 +52,33 @@ class Endpoint extends Client
     }
 
     /**
-     * Checks if Application is set before using an endpoint method
+     * Execute an HTTP API request call and returns data
      *
-     * @throws \RuntimeException
+     * @param string $method  HTTP method type (get, post, ...)
+     * @param string $url     API called URL
+     * @param array  $options Optionals method parameters
+     *
+     * @return \stdClass
+     *
+     * @throws \RuntimeException When Instagram application (client) is not set
      */
-    public function checkIfApplicationIsSet()
+    public function executeRequest($method, $url, array $options = array())
     {
         if (null === $this->application) {
             throw new \RuntimeException('You must set Application before using an endpoint API method.');
         }
+
+        $token = $this->application->getAccessToken();
+
+        $url = sprintf($url . '?access_token=%s', $token);
+        $url .= '&' . http_build_query($options);
+
+        echo $url; exit;
+
+        $response = $this->client->get($url)->send();
+
+        $data = json_decode($response->getBody(true));
+
+        return $data;
     }
 }
