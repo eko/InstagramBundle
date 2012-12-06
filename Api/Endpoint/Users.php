@@ -61,7 +61,8 @@ class Users extends Endpoint
      *
      * @api /v1/users/{id}/media/recent
      *
-     * @param array $options Optionals parameters options
+     * @param int   $identifier User identifier
+     * @param array $options    Optionals parameters options
      *
      * Additionally, you can add the following options:
      * - count:         Count of media to return
@@ -72,9 +73,10 @@ class Users extends Endpoint
      *
      * @return \stdClass
      */
-    public function getRecentMedias(array $options = array())
+    public function getRecentMedias($identifier = null, array $options = array())
     {
-        $url = '/v1/users/'. $this->application->getAccount()->getId() .'/media/recent';
+        $identifier = null === $identifier ? $this->application->getAccount()->getId() : $identifier;
+        $url = '/v1/users/'. $identifier .'/media/recent';
 
         return $this->executeRequest('get', $url, $options);
     }
