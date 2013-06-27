@@ -81,9 +81,7 @@ class Authentication extends Client
             $this->parameters['redirect_url']
         );
 
-        $request = $this->client->get($parameters);
-
-        return $request->getUrl();
+        return $this->client->getBaseUrl() . $parameters;
     }
 
     /**
